@@ -54,8 +54,8 @@ module.exports = function (io) {
 
             res.status(201).json(newVitals);
         } catch (err) {
-            console.error("Error saving vitals:", err);
-            res.status(500).json({ error: "Internal Server Error" });
+            console.error("CRITICAL: Error saving vitals:", err.message); // Updated for Render Logs
+            res.status(500).json({ error: "Internal Server Error", details: err.message });
         }
     });
 
@@ -98,7 +98,8 @@ module.exports = function (io) {
             const patients = await Patient.find();
             res.json(patients);
         } catch (err) {
-            res.status(500).json({ error: "Internal Server Error" });
+            console.error("Error fetching patients:", err.message);
+            res.status(500).json({ error: "Internal Server Error", details: err.message });
         }
     });
 
