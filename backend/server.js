@@ -13,7 +13,9 @@ const io = new Server(server, {
     cors: {
         origin: "*", // allow all in dev
         methods: ["GET", "POST"]
-    }
+    },
+    pingTimeout: 60000, // wait up to 60s for client
+    pingInterval: 25000 // send ping every 25s
 });
 
 app.use(cors());
@@ -44,5 +46,10 @@ io.on('connection', (socket) => {
 const apiRoutes = require('./routes/api')(io);
 app.use('/api', apiRoutes);
 
+// Export the app for Vercel
+module.exports = app;
+
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Backend server running on port ${PORT}`));
+if (require.main === module) {
+    server.listen(PORT, () => console.log(`Backend server running on port ${PORT}`));
+}
